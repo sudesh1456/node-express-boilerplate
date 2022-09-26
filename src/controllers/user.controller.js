@@ -5,14 +5,18 @@ const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
+  const userid = req.user._id;
+  if(userid && userid != "undefined" && req.user.role == "admin")
+    req.body.parent_user = userid;
   const user = await userService.createUser(req.body);
   res.status(httpStatus.CREATED).send(user);
 });
 
 const getUsers = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const userid = req.user._id;
+  const filter = pick(req, ['name', 'role']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await userService.queryUsers(filter, options);
+  const result = await userService.queryUsers(filter, options,userid);
   res.send(result);
 });
 

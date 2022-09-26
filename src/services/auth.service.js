@@ -4,6 +4,7 @@ const userService = require('./user.service');
 const Token = require('../models/token.model');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
+const zerodha = require('./zerodha.service');
 
 /**
  * Login with username and password
@@ -12,10 +13,21 @@ const { tokenTypes } = require('../config/tokens');
  * @returns {Promise<User>}
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
-  const user = await userService.getUserByEmail(email);
+
+  var user = await userService.getUserByEmail(email);
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
+  // try {
+  //   var response = await zerodha.generateAuthTokens("N8iU89c27SuUcUCmJjMYbKrS5i0W22Xg", "g5w49jiwtlhif468ur0fdxpgp9xf9ibo");
+  //   console.log(response);
+  // }
+  // catch (e) {
+  //   console.log(e);
+  // }
+  user = JSON.parse(JSON.stringify(user));
+  user.is_token_active = await zerodha.validate_token("1h9y6HCEadQQDpZSgC4qpoq5auJwZ95w");
+  user.login_url = await zerodha.getLoginURL();
   return user;
 };
 
