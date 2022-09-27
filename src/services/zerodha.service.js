@@ -67,6 +67,10 @@ const getMargins = async function () {
     return await kc.getMargins();
 };
 
+const getInstruments = async function () {
+    return await kc.getInstruments();
+};
+
 const generateSession = async function () {
     //await validate_token('1h9y6HCEadQQDpZSgC4qpoq5auJwZ95w');
     console.log(kc.getLoginURL());
@@ -127,7 +131,7 @@ const init = function () {
         });
 };
 
-module.exports = { setApiKey, set_request_token, validate_token, getLoginURL, generateAuthTokens, getProfile, getMargins, getOrders, getTrades, getHoldings, getPositions, generateSession }
+module.exports = { setApiKey, set_request_token, validate_token, getLoginURL, generateAuthTokens, getProfile, getMargins, getOrders, getTrades, getHoldings, getPositions, generateSession, getInstruments }
 
 function websockets() {
     var ticker = new KiteTicker({

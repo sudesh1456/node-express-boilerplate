@@ -10,5 +10,7 @@ router.route('/getTrades').get(auth(), tradeController.getTrades);
 router.route('/getHoldings').get(auth(), tradeController.getHoldings);
 router.route('/getPositions').get(auth(), tradeController.getPositions);
 router.route('/getMargins').get(auth(), tradeController.getMargins);
+router.route('/generateAuthTokens').get(auth(), tradeController.generateAuthTokens);
+router.route('/getInstruments').get(auth(), tradeController.getInstruments);
 
 module.exports = router;

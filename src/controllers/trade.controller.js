@@ -33,16 +33,28 @@ const getMargins = catchAsync(async (req, res) => {
   await executeMethod(req, res, zerodhaService.getMargins);
 });
 
+const getInstruments = catchAsync(async (req, res) => {
+  await executeMethod(req, res, zerodhaService.getInstruments);
+});
+
 async function executeMethod(req, res, method) {
   const filter = { user_id: req.user._id };
   const options = { limit: 1, sortBy: 'createdAt:desc', page: 1 };
   const userAccounts = await useraccountService.queryUseraccount(filter, options);
   if (userAccounts && userAccounts.results.length > 0) {
     zerodhaService.setApiKey(userAccounts.results[0].api_key, userAccounts.results[0].api_secret, userAccounts.results[0].access_token);
-    const result = await method();
-    res.send(result);
+    try {
+      const result = await method();
+      res.send(result);
+    }
+    catch (e) {
+      console.log(e);
+      res.send(null);
+    }
   }
-  res.send(null);
+  else {
+    res.send(null);
+  }
 }
 
 module.exports = {
@@ -52,7 +64,8 @@ module.exports = {
   getTrades,
   getHoldings,
   getPositions,
-  getMargins
+  getMargins,
+  getInstruments
 };
 
 
